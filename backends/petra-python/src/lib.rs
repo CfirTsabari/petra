@@ -9,7 +9,7 @@ impl PetraPythonBackend {
         PetraPythonBackend {}
     }
 }
-impl Default for PetraPythonBackend{
+impl Default for PetraPythonBackend {
     fn default() -> Self {
         Self::new()
     }
