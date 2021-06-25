@@ -1,0 +1,7 @@
+[workspace]
+
+members = [
+	"petra",
+	"petra-core",
+	"backends/petra-python",
+]
