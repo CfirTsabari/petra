@@ -3,3 +3,4 @@
 3. Change item name from a string to list of strings.
 4. Create an error type.
 5. better way to make trait generic on write
+6. add dependabot + security checker + cargo audit
