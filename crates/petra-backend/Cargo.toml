@@ -1,0 +1,11 @@
+[package]
+name = "petra-backend"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+petra-backend-python = { path = "../petra-backend-python", version = "0.1.0" }
+petra-backend-rust = { path = "../petra-backend-rust", version = "0.1.0" }
+petra-backend-core = { path = "../petra-backend-core", version = "0.1.0" }

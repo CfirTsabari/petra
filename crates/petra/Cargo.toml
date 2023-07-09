@@ -8,5 +8,5 @@ edition = "2021"
 [dependencies]
 clap = { version = "4.3.10", features = ["derive"] }
 petra-core = { path = "../petra-core", version = "0.1.0" }
-petra-python = { path = "../backends/petra-python", version = "0.1.0" }
-petra-rust = { path = "../backends/petra-rust", version = "0.1.0" }
+petra-backend = { path = "../petra-backend", version = "0.1.0" }
+petra-frontend = { path = "../petra-frontend", version = "0.1.0" }
