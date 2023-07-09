@@ -1,5 +1,6 @@
 use std::io::Write;
 
+#[derive(Debug, Clone)]
 pub struct Item {
     pub name: String,
     pub data: ItemData,
@@ -10,6 +11,7 @@ impl Item {
         Item { name, data }
     }
 }
+#[derive(Debug, Clone)]
 pub enum ItemData {
     String(String),
     Integer(i64),

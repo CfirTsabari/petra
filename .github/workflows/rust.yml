@@ -18,6 +18,9 @@ jobs:
       - test
       - build
       - commitlint
+      - run-petra-cli
+      - red_python
+      - red_rust
     steps:
       - run: exit 0
 
@@ -25,65 +28,116 @@ jobs:
     name: Build code
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: set up rust from toolcahin file
-        uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
+        uses: CfirTsabari/actions-rs-toolchain@v1
       - name: build workspace
-        uses: actions-rs/cargo@v1
-        with:
-          command: build
-          args: -vv --workspace --tests
+        run: cargo build -vv --workspace --tests
   test:
     name: Run unit tests
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: set up rust from toolcahin file
-        uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
+        uses: CfirTsabari/actions-rs-toolchain@v1
 
       - name: run tests
-        uses: actions-rs/cargo@v1
-        with:
-          command: test
-          args: -vv --workspace
+        run: cargo test -vv --workspace
 
   style:
     name: Run rustfmt and clippy
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: set up rust from toolcahin file with rustfmt and clippy
-        uses: actions-rs/toolchain@v1
+        uses: CfirTsabari/actions-rs-toolchain@v1
         with:
-          profile: minimal
           components: rustfmt, clippy
 
       - name: check format
-        uses: actions-rs/cargo@v1
-        with:
-          command: fmt
-          args: -- --check
-      - name: Annotate commit with clippy warnings
-        uses: actions-rs/clippy-check@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          args: --tests --workspace --all-targets --all-features
+        run: cargo fmt -- --check
 
       - name: check clippy
-        uses: actions-rs/cargo@v1
-        with:
-          command: clippy
-          args: --tests --workspace --all-targets --all-features -- -D warnings
+        run: cargo clippy --tests --workspace --all-targets --all-features -- -D warnings
 
   commitlint:
     name: Run commitlint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - uses: wagoid/commitlint-github-action@v3
+      - uses: wagoid/commitlint-github-action@v5
+
+  run-petra-cli:
+    name: Run petra
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install rust
+        uses: CfirTsabari/actions-rs-toolchain@v1
+      - name: Build Petra
+        run: cargo build -p petra
+      - name: Run petra python
+        run: |
+          cat showcase/schema.petra | cargo run -p petra -- -b py > showcase/red_python/red_python/model.py
+      - name: Run petra rust
+        run: |
+          cat showcase/schema.petra | cargo run -p petra -- -b rs > showcase/red_rust/src/model.rs
+
+      - name: Verify Changed files
+        uses: tj-actions/verify-changed-files@v16
+        id: verify-changed-files
+      - name: fail if files changed
+        if: ${{ steps.verify-changed-files.outputs.files_changed == 'true' }}
+        run: |
+          echo "Changed files: ${{ steps.verify-changed-files.outputs.changed_files }}"
+          exit 1
+
+  
+  red_python:
+    name: Run Python Showcase
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: showcase/red_python
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11' 
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+      - name: build package
+        run: poetry install
+      
+      
+      - name: run test
+        run: poetry run pytest tests
+      - name: check formatting
+        run: poetry run black --check red_python tests
+      - name: linting
+        run: poetry run ruff tests red_python
+      - name: run mypy
+        run: poetry run mypy red_python tests
+      
+  red_rust:
+    name: Run Rust Showcase
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: showcase/red_rust
+    steps:
+      - uses: actions/checkout@v3
+      - name: set up rust from toolcahin file
+        uses: CfirTsabari/actions-rs-toolchain@v1
+
+      - name: build workspace
+        run: cargo build -vv --workspace --tests      
+      - name: run tests
+        run: cargo test -vv --workspace
+      - name: check format
+        run: cargo fmt -- --check
+      - name: check clippy
+        run: cargo clippy --tests --workspace --all-targets --all-features -- -D warnings
+      

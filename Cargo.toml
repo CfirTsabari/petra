@@ -4,4 +4,5 @@ members = [
 	"petra",
 	"petra-core",
 	"backends/petra-python",
+	"backends/petra-rust",
 ]
