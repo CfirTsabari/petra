@@ -1,0 +1,18 @@
+WHITESPACE = _{ " " }
+multi_line_comment = { "/*" ~ multi_line_comment_val ~ "*/" }
+new_line_comment = { "//" ~new_line_comment_val}
+new_line_comment_val = ${ (!NEWLINE~(ANY))* }
+multi_line_comment_val = ${(!"*/" ~ ANY)*}
+var_declaration = {var_name~":"~var_type~"="~var_value~";"}
+var_name = {ASCII_ALPHA~ASCII_ALPHANUMERIC*}
+var_type = {"i64" | "string"}
+var_value = {var_value_string | var_value_i64}
+var_value_string = ${"\""~var_value_string_val~"\""}
+var_value_string_val = {ASCII_ALPHANUMERIC*}
+var_value_i64 = {ASCII_DIGIT+}
+stmt = _{ 
+    var_declaration
+    | new_line_comment
+    | multi_line_comment }
+
+program = _{ SOI ~ NEWLINE* ~ (stmt ~ NEWLINE+) * ~ stmt? ~ EOI }
