@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 # Save the current directory
 original_dir=$(pwd)

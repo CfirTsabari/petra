@@ -21,5 +21,5 @@ pub fn run() {
     let fe = Frontend::new();
     let be = get_backend(&opts.backend.into());
     let intermediate = fe.parse(std::io::stdin()).unwrap();
-    be.translate(intermediate.items, std::io::stdout()).unwrap();
+    be.translate(intermediate, std::io::stdout()).unwrap();
 }

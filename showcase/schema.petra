@@ -1,3 +1,11 @@
-string:Gabbro:Gabbro
-string:Metamorphic:Metamorphic
-string:Marble:Marble
+// here we have 3 rocks
+Gabbro:string = "Gabbro";
+Marble:string = "Marble";
+Metamorphic:string = "Metamorphic";
+
+/* let's talk about numbers,
+for example we can talk about amount of fruits
+
+ */
+ApplesCount:i64 = 236;
+OrangesCount:i64 = 454588979794318;

@@ -1,6 +1,6 @@
 #[derive(Debug, Clone, Default)]
 pub struct Document {
-    pub items: Vec<Item>,
+    pub items: Vec<TopItem>,
 }
 impl Document {
     #[must_use]
@@ -10,19 +10,25 @@ impl Document {
 }
 
 #[derive(Debug, Clone)]
-pub struct Item {
+pub struct VarDeclaration {
     pub name: String,
-    pub data: ItemData,
+    pub value: VarValue,
 }
 
-impl Item {
+impl VarDeclaration {
     #[must_use]
-    pub const fn new(name: String, data: ItemData) -> Self {
-        Self { name, data }
+    pub const fn new(name: String, value: VarValue) -> Self {
+        Self { name, value }
     }
 }
 #[derive(Debug, Clone)]
-pub enum ItemData {
+pub enum VarValue {
     String(String),
-    Integer(i64),
+    Integer64(i64),
+}
+#[derive(Debug, Clone)]
+pub enum TopItem {
+    Comment(String),
+    MultiLineComment(String),
+    VarDeclaration(VarDeclaration),
 }

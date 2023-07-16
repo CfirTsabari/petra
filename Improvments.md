@@ -13,3 +13,13 @@
 9. added generated comment on top
 12. support const enum value
 13. add java
+14. add petra fmt
+15. add pest fmt
+16. make document more private and allow iter or adding
+17. add tracing
+18. maybe add some way of creating struct to combine multiple fields
+19. add boolean?
+20. support using underscore in numbers
+21. support better spacing?
+22. support cargo binstall
+23. publish project?
