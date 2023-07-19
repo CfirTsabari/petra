@@ -1,88 +1,117 @@
 
-# v1
-## Features
-1. add petra fmt
+# Versions:
+- V1 - I want to have that before I release the first version of `petra`
+- V1.5 - I want to have that, but it doesn't have to be as part of the first version.
+- V2 - I am not sure wether I even want to have that, and only if people will use `petra` and request it this will be considered
+
+# Features
+## V1
 1. support cargo binstall
+1. read Directory
+## V1.5
+1. add petra fmt
+## V2
+1. read config from file
 
-### Programming languages
-1. T0
-    1. TS
-    1. JS(nodejs+browser)
-    1. Golang
-    1. Java
-    1. CPP
-    1. Python
-    1. Rust
-1. T1
-    1. haskel
-    1. Ruby
-    1. Shell
-    1. Powershell
-1. T2
-    1. Kotlin
-    1. objectiveC
-    1. Scala	
-    1. Perl
-
-1. T3
-    1. Elm
-    1. groovy
-    1. PHP
-    1. clojure
-
-1. flatbuffer/protobuff tier
-    1. Lobster
-    1. Kotlin
-    1. C#
-    1. Dart
-    1. Lua
-    1. PHP
-    1. Swift
-    1. C
-    1. PHP
-1. Niche Tier
-    1. zig
-    1. rhai
-
-
-### Petra schema
-1. Sets of string
-1. Dicts
+# Petra schema
+## V1
 1. Enums
-1. add boolean
-1. floats
-1. support using underscore in numbers
+1. Floats
 1. versioning
+## V1.5
+1. support using underscore in numbers
+1. durations
 
-## Quality\CI
+## V2
+1. Sets/List of string
+1. Dicts
+1. Boolean
+1. Bytes
+1. Chars
+1. Structs
+1. mod
+1. include other files
+1. Nested detentions
+
+
+
+
+
+# Quality\CI
+## V1
+1. add tracing
+1. add more testing
+1. added generated comment on top
 1. Create an error type - thiserror+anyerror
+
+## V1.5
 1. better way to make trait generic on write
 1. add dependabot + security checker + cargo audit
 1. change showcase CI to be a separate workflow
-1. added generated comment on top
 1. add pest fmt
-1. add tracing
-1. publish project?
 
-## Refactoring
+## V2
+1. stop using memory and change to streams
+1. publish project as a binary
+1. publish project as a library
+
+# Refactoring
+## V1
+## V1.5
 1. Change item name from a string to list of strings.
 1. make document more private and allow iter or adding
+## V2
 
 ## Docs
+# V1
 1. Create readme file
-1. Create documentation
+
+# V1.5
+1. Create documentation(book)
 1. Create website(netlify)
 1. document programming languages tiers and support 
 
-# v2
-1. multi file schema + nesting
-1. stop using memory and change to streams
-1. maybe add some way of creating struct to combine multiple fields
-1. support better spacing?
-1. Support const values of other definitions in the file
-1. support nested detention's
-1. read config from file
-1. durations
+# V2
+1. Fiddler - try online
 
 
 
+# Programming languages
+## T0
+1. TS
+1. JS(nodejs+browser)
+1. Golang
+1. Java
+1. CPP
+1. Python
+1. Rust
+## T1
+1. haskel
+1. Ruby
+1. Shell
+1. Powershell
+## T2
+1. Kotlin
+1. objectiveC
+1. Scala	
+1. Perl
+
+1. T3
+1. Elm
+1. groovy
+1. PHP
+1. clojure
+
+## flatbuffer/protobuff tier
+1. Lobster
+1. Kotlin
+1. C#
+1. Dart
+1. Lua
+1. PHP
+1. Swift
+1. C
+1. PHP
+## Niche Tier
+1. zig
+1. rhai
