@@ -1,0 +1,88 @@
+name: Check Showcases
+on:
+  workflow_call:
+jobs:
+  red_rust:
+    name: Run Rust Showcase
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: showcase/red_rust
+    steps:
+      - uses: actions/checkout@v3
+      - name: set up rust from toolcahin file
+        uses: CfirTsabari/actions-rs-toolchain@v1
+
+      - name: build workspace
+        run: cargo build -vv --workspace --tests      
+      - name: run tests
+        run: cargo test -vv --workspace
+      - name: check format
+        run: cargo fmt -- --check
+      - name: check clippy
+        run: cargo clippy --tests --workspace --all-targets --all-features -- -D warnings
+  red_python:
+    name: Run Python Showcase
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: showcase/red_python
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11' 
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+      - name: build package
+        run: poetry install
+      
+      
+      - name: run test
+        run: poetry run pytest tests
+      - name: check formatting
+        run: poetry run black --check red_python tests
+      - name: linting
+        run: poetry run ruff tests red_python
+      - name: run mypy
+        run: poetry run mypy red_python tests
+      
+  red_golang:
+    name: Run GoLang Showcase
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: showcase/red_golang
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: "1.19"
+      
+      - name: Install goimports
+        run: go install golang.org/x/tools/cmd/goimports@v0.9.3
+
+      - name: check code format
+        run: test -z "$(goimports -d .)"
+
+      - name: Build
+        run: go build -v ./...
+
+      - name: Test
+        run: go test -v ./...
+      
+      - name: run go vet
+        run: go vet -v ./...
+      
+      - uses: dominikh/staticcheck-action@v1
+        with:
+          install-go: false
+          version: "2022.1.3"
+          working-directory: showcase/red_golang
+
+
+      - uses: golangci/golangci-lint-action@v3
+        with:
+          version: "v1.53.3"
+          working-directory: showcase/red_golang

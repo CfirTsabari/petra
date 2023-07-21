@@ -8,4 +8,5 @@ edition = "2021"
 [dependencies]
 petra-backend-python = { path = "../petra-backend-python", version = "0.1.0" }
 petra-backend-rust = { path = "../petra-backend-rust", version = "0.1.0" }
+petra-backend-golang = { path = "../petra-backend-golang", version = "0.1.0" }
 petra-backend-core = { path = "../petra-backend-core", version = "0.1.0" }

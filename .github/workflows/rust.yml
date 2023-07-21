@@ -19,8 +19,7 @@ jobs:
       - build
       - commitlint
       - run-petra-cli
-      - red_python
-      - red_rust
+      - check-showcase
     steps:
       - run: exit 0
 
@@ -95,49 +94,5 @@ jobs:
           exit 1
 
   
-  red_python:
-    name: Run Python Showcase
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: showcase/red_python
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
-        with:
-          python-version: '3.11' 
-      - name: Install Poetry
-        uses: snok/install-poetry@v1
-      - name: build package
-        run: poetry install
-      
-      
-      - name: run test
-        run: poetry run pytest tests
-      - name: check formatting
-        run: poetry run black --check red_python tests
-      - name: linting
-        run: poetry run ruff tests red_python
-      - name: run mypy
-        run: poetry run mypy red_python tests
-      
-  red_rust:
-    name: Run Rust Showcase
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: showcase/red_rust
-    steps:
-      - uses: actions/checkout@v3
-      - name: set up rust from toolcahin file
-        uses: CfirTsabari/actions-rs-toolchain@v1
-
-      - name: build workspace
-        run: cargo build -vv --workspace --tests      
-      - name: run tests
-        run: cargo test -vv --workspace
-      - name: check format
-        run: cargo fmt -- --check
-      - name: check clippy
-        run: cargo clippy --tests --workspace --all-targets --all-features -- -D warnings
-      
+  check-showcase:
+    uses: ./.github/workflows/showcase.yml
