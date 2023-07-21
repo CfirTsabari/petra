@@ -10,14 +10,19 @@
 1. read Directory
 ## V1.5
 1. add petra fmt
+
 ## V2
 1. read config from file
+1. display order of options
+1. completions
 
 # Petra schema
 ## V1
 1. Enums
 1. Floats
 1. versioning
+1. support better spacing
+
 ## V1.5
 1. support using underscore in numbers
 1. durations
@@ -41,25 +46,27 @@
 ## V1
 1. add tracing
 1. add more testing
-1. added generated comment on top
+1. ~~added generated comment on top~~
 1. Create an error type - thiserror+anyerror
 
 ## V1.5
 1. better way to make trait generic on write
 1. add dependabot + security checker + cargo audit
-1. change showcase CI to be a separate workflow
+1. ~~change showcase CI to be a separate workflow~~
 1. add pest fmt
 
 ## V2
 1. stop using memory and change to streams
 1. publish project as a binary
 1. publish project as a library
+1. better warnings printing
 
 # Refactoring
 ## V1
 ## V1.5
 1. Change item name from a string to list of strings.
-1. make document more private and allow iter or adding
+1. Make document more private and allow iter or adding
+
 ## V2
 
 ## Docs
@@ -70,6 +77,7 @@
 1. Create documentation(book)
 1. Create website(netlify)
 1. document programming languages tiers and support 
+1. man pages
 
 # V2
 1. Fiddler - try online
@@ -77,7 +85,7 @@
 
 
 # Programming languages
-## T0
+## T0 - V1
 1. TS
 1. JS(nodejs+browser)
 1. Golang
@@ -85,33 +93,36 @@
 1. CPP
 1. Python
 1. Rust
-## T1
+1. C#
+## T1 - V1.5
 1. haskel
 1. Ruby
 1. Shell
 1. Powershell
-## T2
+## T2 - V3
 1. Kotlin
 1. objectiveC
 1. Scala	
 1. Perl
 
-1. T3
+## T3 - V3
 1. Elm
 1. groovy
 1. PHP
 1. clojure
 
-## flatbuffer/protobuff tier
+## flatbuffer/protobuff tier - V2
 1. Lobster
 1. Kotlin
-1. C#
 1. Dart
 1. Lua
 1. PHP
 1. Swift
 1. C
-1. PHP
-## Niche Tier
+1. Nim
+
+## Niche Tier - V1.5
 1. zig
 1. rhai
+1. Carbon
+1. Nim

@@ -1,3 +1,3 @@
 mod schema;
 
-pub use schema::{Document, TopItem, VarDeclaration, VarValue};
+pub use schema::{Document, Name, TopItem, VarDeclaration, VarValue};
