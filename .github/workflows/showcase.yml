@@ -86,3 +86,30 @@ jobs:
         with:
           version: "v1.53.3"
           working-directory: showcase/red_golang
+  red_csharp:
+    name: Run C# Showcase
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: showcase/red_csharp
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup .NET Core SDK
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: "7.0"
+      
+      - name: Install dependencies
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --configuration Release --no-restore
+
+      - name: Test
+        run: dotnet test --no-restore --verbosity normal
+
+        
+      - name: Check format and linters
+        # still need to fix this
+        continue-on-error: true
+        run: dotnet format --verify-no-changes --no-restore 

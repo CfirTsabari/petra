@@ -2,7 +2,7 @@ pub mod format;
 mod helper;
 pub mod simple_language;
 
-use crate::Result;
+use crate::{BackendConfiguration, Result};
 use petra_core::Document;
 use std::io::Write;
 
@@ -15,5 +15,5 @@ where
     /// # Errors
     ///
     /// Will return if unable to write string to writer.
-    fn translate(&self, document: Document, writer: T) -> Result<()>;
+    fn translate(&self, config: BackendConfiguration, document: Document, writer: T) -> Result<()>;
 }

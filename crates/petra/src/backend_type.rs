@@ -14,6 +14,8 @@ pub enum BackendType {
     JavaScript,
     #[value(aliases(["rust","rs"]))]
     Rust,
+    #[value(aliases(["csharp","C#","c#"]))]
+    CSharp,
 }
 impl From<BackendType> for CoreBackendType {
     fn from(val: BackendType) -> Self {
@@ -23,6 +25,7 @@ impl From<BackendType> for CoreBackendType {
             BackendType::TypeScript => Self::TypeScript,
             BackendType::JavaScript => Self::JavaScript,
             BackendType::Rust => Self::Rust,
+            BackendType::CSharp => Self::CSharp,
         }
     }
 }

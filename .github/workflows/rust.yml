@@ -95,4 +95,5 @@ jobs:
 
   
   check-showcase:
+    name: Check showcase projects
     uses: ./.github/workflows/showcase.yml

@@ -59,3 +59,9 @@ impl Name {
         self.data.as_str().to_case(Case::Snake)
     }
 }
+
+impl From<String> for Name {
+    fn from(val: String) -> Self {
+        Self::new(val)
+    }
+}
