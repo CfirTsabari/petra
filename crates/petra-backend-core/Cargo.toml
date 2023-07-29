@@ -7,4 +7,5 @@ edition = "2021"
 
 [dependencies]
 petra-core = { path = "../petra-core", version = "0.1.0" }
+petra-backend-core-derive = { path = "../petra-backend-core-derive", version = "0.1.0" }
 thiserror = "1.0.43"

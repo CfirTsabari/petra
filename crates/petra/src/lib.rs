@@ -14,5 +14,6 @@ pub fn run() {
     let fe = Frontend::new();
     let be = get_backend(&opts.backend().into(), &opts);
     let intermediate: petra_core::Document = fe.parse(std::io::stdin()).unwrap();
-    be.translate(intermediate, std::io::stdout()).unwrap();
+    be.translate((&opts).into(), intermediate, std::io::stdout())
+        .unwrap();
 }

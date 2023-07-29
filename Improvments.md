@@ -60,6 +60,8 @@
 1. publish project as a binary
 1. publish project as a library
 1. better warnings printing
+1. create a public gitpod docker
+1. create a feature for each language.
 
 # Refactoring
 ## V1
