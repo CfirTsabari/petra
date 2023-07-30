@@ -2,7 +2,7 @@ mod args;
 mod backend_type;
 
 use clap::Parser;
-use petra_backend::get_backend;
+use petra_backend::{get_backend, BackendConfiguration};
 use petra_frontend::Frontend;
 
 /// # Panics
@@ -12,8 +12,9 @@ pub fn run() {
     let opts = args::PetraOpts::parse();
     opts.validate();
     let fe = Frontend::new();
-    let be = get_backend(&opts.backend().into(), &opts);
+    let mut be = get_backend(&opts.backend().into(), &opts);
     let intermediate: petra_core::Document = fe.parse(std::io::stdin()).unwrap();
-    be.translate((&opts).into(), intermediate, std::io::stdout())
+    let be_config: BackendConfiguration = (&opts).into();
+    be.format(&be_config, &intermediate, &mut std::io::stdout())
         .unwrap();
 }

@@ -3,7 +3,8 @@ use super::format::{
     PetraFormatLineComment, PetraFormatMultiLineComment, PetraFormatString,
 };
 use super::helper::WriteHeader;
-use crate::{Backend, BackendConfiguration, Result};
+use crate::Result;
+use crate::{Backend, BackendConfiguration};
 use petra_core::{Document, TopItem, VarDeclaration, VarValue};
 use std::io::Write;
 
@@ -25,35 +26,32 @@ where
     T: Write,
     B: SimpleLanguageBackend,
 {
-    fn translate(
-        &self,
-        config: BackendConfiguration,
-        document: Document,
-        mut writer: T,
+    fn format(
+        &mut self,
+        config: &BackendConfiguration,
+        document: &Document,
+        writer: &mut T,
     ) -> Result<()> {
-        self.write_header(&mut writer, config.create_auto_generated_comment())?;
-        for item in document.items {
+        self.write_header(writer, config.create_auto_generated_comment())?;
+        for item in &document.items {
             match item {
                 TopItem::Comment(comment) => {
-                    writer.write_all(&PetraFormatLineComment::format(self, &comment))?;
+                    PetraFormatLineComment::format(self, comment, writer)?;
                 }
                 TopItem::MultiLineComment(comment) => {
-                    writer.write_all(&PetraFormatMultiLineComment::format(self, &comment))?;
+                    PetraFormatMultiLineComment::format(self, comment, writer)?;
                 }
                 TopItem::VarDeclaration(VarDeclaration {
                     name,
                     value: VarValue::Integer64(value),
-                }) => writer.write_all(&PetraFormatI64::format(self, &name, value))?,
+                }) => PetraFormatI64::format(self, name, *value, writer)?,
                 TopItem::VarDeclaration(VarDeclaration {
                     name,
                     value: VarValue::String(value),
-                }) => writer.write_all(&PetraFormatString::format(self, &name, &value))?,
+                }) => PetraFormatString::format(self, name, value, writer)?,
             }
         }
-        if let Some(footer) = PetraFormatFooter::format(self) {
-            writer.write_all(&footer)?;
-        }
-
+        PetraFormatFooter::format(self, writer)?;
         Ok(())
     }
 }

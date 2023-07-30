@@ -1,7 +1,6 @@
 mod configuration;
-use petra_backend_core::format;
-use petra_backend_core::Name;
-use petra_backend_core::SimpleLanguageBackend;
+use petra_backend_core::{format, Name, SimpleLanguageBackend};
+use std::io::Write;
 
 pub use configuration::PetraGolangConfiguration;
 
@@ -20,38 +19,33 @@ impl PetraGolangBackend {
 }
 
 impl format::PetraFormatHeader for PetraGolangBackend {
-    fn format(&self) -> Option<Vec<u8>> {
-        Some(format!("package {}\n\n", self.config.get_package_name()).into_bytes())
+    fn format<T: Write>(&mut self, writer: &mut T) -> std::io::Result<()> {
+        writeln!(writer, "package {}\n", self.config.get_package_name())
     }
 }
 impl format::PetraFormatI64 for PetraGolangBackend {
-    fn format(&self, name: &Name, data: i64) -> Vec<u8> {
+    fn format<T: Write>(&mut self, name: &Name, data: i64, writer: &mut T) -> std::io::Result<()> {
         let name = name.to_pascal_case();
-        let data = format!("const {name} = {data}\n");
-        data.into_bytes()
+        writeln!(writer, "const {name} = {data}")
     }
 }
 impl format::PetraFormatString for PetraGolangBackend {
-    fn format(&self, name: &Name, data: &str) -> Vec<u8> {
+    fn format<T: Write>(&mut self, name: &Name, data: &str, writer: &mut T) -> std::io::Result<()> {
         let name = name.to_pascal_case();
-        let data = format!("const {name} = \"{data}\"\n");
-        data.into_bytes()
+        writeln!(writer, "const {name} = \"{data}\"")
     }
 }
 impl format::PetraFormatLineComment for PetraGolangBackend {
-    fn format(&self, comment: &str) -> Vec<u8> {
-        [b"// ", comment.as_bytes(), b"\n"].concat()
+    fn format<T: Write>(&mut self, comment: &str, writer: &mut T) -> std::io::Result<()> {
+        writeln!(writer, "// {comment}")
     }
 }
 impl format::PetraFormatMultiLineComment for PetraGolangBackend {
-    fn format(&self, comment: &str) -> Vec<u8> {
-        // this might be improved a bit in the future.
-        let mut res: Vec<Vec<u8>> = vec![b"\n/*\n".to_vec()];
+    fn format<T: Write>(&mut self, comment: &str, writer: &mut T) -> std::io::Result<()> {
+        writeln!(writer, "\n/*")?;
         for line in comment.lines().filter(|&x| !x.trim().is_empty()) {
-            res.push(line.as_bytes().to_vec());
-            res.push(b"\n".to_vec());
+            writeln!(writer, "{line}")?;
         }
-        res.push(b"*/\n".to_vec());
-        res.concat()
+        writeln!(writer, "*/")
     }
 }

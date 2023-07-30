@@ -1,6 +1,7 @@
 use petra_backend_core::format;
 use petra_backend_core::Name;
 use petra_backend_core::SimpleLanguageBackend;
+use std::io::Write;
 
 #[derive(
     SimpleLanguageBackend,
@@ -22,26 +23,24 @@ impl Default for PetraRustBackend {
     }
 }
 impl format::PetraFormatI64 for PetraRustBackend {
-    fn format(&self, name: &Name, data: i64) -> Vec<u8> {
+    fn format<T: Write>(&mut self, name: &Name, data: i64, writer: &mut T) -> std::io::Result<()> {
         let name = name.to_upper_snake();
-        let data = format!("pub const {name}: i64 = {data};\n");
-        data.into_bytes()
+        writeln!(writer, "pub const {name}: i64 = {data};")
     }
 }
 impl format::PetraFormatString for PetraRustBackend {
-    fn format(&self, name: &Name, data: &str) -> Vec<u8> {
+    fn format<T: Write>(&mut self, name: &Name, data: &str, writer: &mut T) -> std::io::Result<()> {
         let name = name.to_upper_snake();
-        let data = format!("pub const {name}: &str = \"{data}\";\n");
-        data.into_bytes()
+        writeln!(writer, "pub const {name}: &str = \"{data}\";")
     }
 }
 impl format::PetraFormatLineComment for PetraRustBackend {
-    fn format(&self, comment: &str) -> Vec<u8> {
-        [b"// ", comment.as_bytes(), b"\n"].concat()
+    fn format<T: Write>(&mut self, comment: &str, writer: &mut T) -> std::io::Result<()> {
+        writeln!(writer, "// {comment}")
     }
 }
 impl format::PetraFormatMultiLineComment for PetraRustBackend {
-    fn format(&self, comment: &str) -> Vec<u8> {
-        [b"/*", comment.as_bytes(), b"*/\n"].concat()
+    fn format<T: Write>(&mut self, comment: &str, writer: &mut T) -> std::io::Result<()> {
+        writeln!(writer, "/*{comment}*/")
     }
 }
