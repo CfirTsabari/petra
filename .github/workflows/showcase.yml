@@ -110,6 +110,4 @@ jobs:
 
         
       - name: Check format and linters
-        # still need to fix this
-        continue-on-error: true
         run: dotnet format --verify-no-changes --no-restore 

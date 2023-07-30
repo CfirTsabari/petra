@@ -26,6 +26,7 @@ impl format::PetraFormatHeader for PetraCSharpBackend {
     fn format<T: Write>(&mut self, writer: &mut T) -> std::io::Result<()> {
         self.current_indentation = SPACE_4.into();
         writeln!(writer, "namespace {};", self.config.get_namespace_name())?;
+        writeln!(writer)?;
         writeln!(
             writer,
             "public static class {}",
@@ -69,15 +70,19 @@ impl format::PetraFormatString for PetraCSharpBackend {
 }
 impl format::PetraFormatLineComment for PetraCSharpBackend {
     fn format<T: Write>(&mut self, comment: &str, writer: &mut T) -> std::io::Result<()> {
-        writeln!(writer, "{}//{comment}", self.current_indentation)
+        writeln!(writer, "{}// {comment}", self.current_indentation)
     }
 }
 impl format::PetraFormatMultiLineComment for PetraCSharpBackend {
     fn format<T: Write>(&mut self, comment: &str, writer: &mut T) -> std::io::Result<()> {
-        writeln!(writer, "/*")?;
+        writeln!(writer, "{}/*", self.current_indentation)?;
         for line in comment.lines() {
-            writeln!(writer, "{}{line}", self.current_indentation)?;
+            if line.trim().is_empty() {
+                writeln!(writer)?;
+            } else {
+                writeln!(writer, "{}{line}", self.current_indentation)?;
+            }
         }
-        writeln!(writer, "*/")
+        writeln!(writer, "{}*/", self.current_indentation)
     }
 }
