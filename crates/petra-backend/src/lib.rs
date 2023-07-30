@@ -1,5 +1,7 @@
 pub mod config;
 
+pub use petra_backend_core::BackendConfiguration;
+
 use petra_backend_core::Backend;
 use petra_backend_csharp::PetraCSharpBackend;
 use petra_backend_golang::PetraGolangBackend;
