@@ -1,4 +1,6 @@
+#[cfg(feature = "csharp")]
 mod csharp;
+#[cfg(feature = "golang")]
 mod golang;
 
 use super::backend_type::BackendType;
@@ -6,19 +8,18 @@ use clap::Parser;
 use petra_backend::config::BackendConfiguration;
 use petra_backend::config::PetraConfiguration;
 
-use csharp::CSharpBackendOpts;
-use golang::GoLangBackendOpts;
-
 // In the future we might need to start working with clap builder, this will allow better flexibility for example iterate through all golang params.
 
 /// Convert petra file into specific language representation.
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
 pub struct PetraOpts {
+    #[cfg(feature = "golang")]
     #[command(flatten)]
-    golang_opts: Option<GoLangBackendOpts>,
+    golang_opts: Option<golang::GoLangBackendOpts>,
+    #[cfg(feature = "csharp")]
     #[command(flatten)]
-    csharp_opts: Option<CSharpBackendOpts>,
+    csharp_opts: Option<csharp::CSharpBackendOpts>,
     /// language backend
     #[arg(short, long)]
     backend: BackendType,
@@ -28,12 +29,14 @@ pub struct PetraOpts {
 }
 impl PetraOpts {
     pub fn validate(&self) {
+        #[cfg(feature = "golang")]
         if let (Some(golang_opts), true) = (
             self.golang_opts.as_ref(),
             self.backend != BackendType::GoLang,
         ) {
             self.eprint_irrelevant_fields(&golang_opts.get_used_fields_names());
         }
+        #[cfg(feature = "csharp")]
         if let (Some(csharp_opts), true) = (
             self.csharp_opts.as_ref(),
             self.backend != BackendType::CSharp,
@@ -64,9 +67,11 @@ impl PetraOpts {
 impl From<&PetraOpts> for PetraConfiguration {
     fn from(val: &PetraOpts) -> Self {
         let mut res = Self::new();
+        #[cfg(feature = "csharp")]
         if let Some(csharp_opts) = val.csharp_opts.as_ref() {
             res.set_csharp(csharp_opts.into());
         }
+        #[cfg(feature = "golang")]
         if let Some(golang_opts) = val.golang_opts.as_ref() {
             res.set_golang(golang_opts.into());
         }
