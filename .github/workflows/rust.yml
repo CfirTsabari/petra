@@ -22,6 +22,22 @@ jobs:
       - check-showcase
     steps:
       - run: exit 0
+  build-feature:
+    runs-on: ubuntu-latest
+    name: Build one feature - ${{ matrix.feature }}
+    strategy:
+      matrix:
+        feature:
+          - python
+          - rust
+          - golang
+          - csharp
+    steps:
+      - uses: actions/checkout@v3
+      - name: set up rust from toolcahin file
+        uses: CfirTsabari/actions-rs-toolchain@v1
+      - name: build ${{ matrix.feature }}
+        run: cargo build -vv -p petra --no-default-features --features ${{ matrix.feature }}
 
   build:
     name: Build code
