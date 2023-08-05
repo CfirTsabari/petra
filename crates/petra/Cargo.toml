@@ -13,15 +13,17 @@ petra-frontend = { path = "../petra-frontend", version = "0.1.0" }
 
 [features]
 default = [
-    "t0",
+    "T0",
 ]
-t0 = [
+T0 = [
     "python",
     "rust",
     "golang",
     "csharp",
+    "java",
 ]
 python = ["petra-backend/python"]
 rust = ["petra-backend/rust"]
 golang = ["petra-backend/golang"]
 csharp = ["petra-backend/csharp"]
+java = ["petra-backend/java"]

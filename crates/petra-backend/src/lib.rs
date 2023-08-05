@@ -7,6 +7,8 @@ use petra_backend_core::Backend;
 use petra_backend_csharp::PetraCSharpBackend;
 #[cfg(feature = "golang")]
 use petra_backend_golang::PetraGolangBackend;
+#[cfg(feature = "java")]
+use petra_backend_java::PetraJavaBackend;
 #[cfg(feature = "python")]
 use petra_backend_python::PetraPythonBackend;
 #[cfg(feature = "rust")]
@@ -27,6 +29,8 @@ pub enum BackendType {
     Rust,
     #[cfg(feature = "csharp")]
     CSharp,
+    #[cfg(feature = "java")]
+    Java,
 }
 
 /// # Panics
@@ -50,5 +54,7 @@ pub fn get_backend<T: Write, C: Into<config::PetraConfiguration>>(
         }
         #[cfg(feature = "rust")]
         BackendType::Rust => Box::new(PetraRustBackend::new()),
+        #[cfg(feature = "java")]
+        BackendType::Java => Box::new(PetraJavaBackend::new(configuration.java())),
     }
 }

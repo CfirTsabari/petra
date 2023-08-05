@@ -1,25 +1,27 @@
 use clap::ValueEnum;
 use petra_backend::BackendType as CoreBackendType;
-// Define your enum
 #[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord, ValueEnum)]
 #[value(rename_all = "PascalCase")]
 pub enum BackendType {
     #[cfg(feature = "python")]
-    #[value(aliases(["python","py"]))]
+    #[value(aliases(["python","py"]),help("aliases: python, py."))]
     Python,
     #[cfg(feature = "golang")]
-    #[value(aliases(["golang","go"]))]
+    #[value(aliases(["golang","go"]),help("aliases: golang, go."))]
     GoLang,
-    #[value(aliases(["typescript","ts"]))]
+    #[value(aliases(["typescript","ts"]),help("aliases: typescript, ts."))]
     TypeScript,
-    #[value(aliases(["javascript","js"]))]
+    #[value(aliases(["javascript","js"]),help("aliases: javascript, js."))]
     JavaScript,
     #[cfg(feature = "rust")]
-    #[value(aliases(["rust","rs"]))]
+    #[value(aliases(["rust","rs"]),help("aliases: rust, rs."))]
     Rust,
     #[cfg(feature = "csharp")]
-    #[value(aliases(["csharp","C#","c#"]))]
+    #[value(aliases(["csharp","C#","c#","cs"]),help("aliases: csharp, C#, c#, cs."))]
     CSharp,
+    #[cfg(feature = "java")]
+    #[value(aliases(["java"]),help("aliases: java."))]
+    Java,
 }
 impl From<BackendType> for CoreBackendType {
     fn from(val: BackendType) -> Self {
@@ -34,6 +36,8 @@ impl From<BackendType> for CoreBackendType {
             BackendType::Rust => Self::Rust,
             #[cfg(feature = "csharp")]
             BackendType::CSharp => Self::CSharp,
+            #[cfg(feature = "java")]
+            BackendType::Java => Self::Java,
         }
     }
 }

@@ -2,6 +2,8 @@
 mod csharp;
 #[cfg(feature = "golang")]
 mod golang;
+#[cfg(feature = "java")]
+mod java;
 
 use super::backend_type::BackendType;
 use clap::Parser;
@@ -14,18 +16,21 @@ use petra_backend::config::PetraConfiguration;
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
 pub struct PetraOpts {
+    /// language backend
+    #[arg(short, long)]
+    backend: BackendType,
+    /// disable generating the auto generated comment
+    #[arg(long)]
+    no_gen_comment: bool,
     #[cfg(feature = "golang")]
     #[command(flatten)]
     golang_opts: Option<golang::GoLangBackendOpts>,
     #[cfg(feature = "csharp")]
     #[command(flatten)]
     csharp_opts: Option<csharp::CSharpBackendOpts>,
-    /// language backend
-    #[arg(short, long)]
-    backend: BackendType,
-    /// language backend
-    #[arg(long)]
-    no_gen_comment: bool,
+    #[cfg(feature = "java")]
+    #[command(flatten)]
+    java_opts: Option<java::JavaBackendOpts>,
 }
 impl PetraOpts {
     pub fn validate(&self) {
@@ -42,6 +47,12 @@ impl PetraOpts {
             self.backend != BackendType::CSharp,
         ) {
             self.eprint_irrelevant_fields(&csharp_opts.get_used_fields_names());
+        }
+        #[cfg(feature = "java")]
+        if let (Some(java_opts), true) =
+            (self.java_opts.as_ref(), self.backend != BackendType::Java)
+        {
+            self.eprint_irrelevant_fields(&java_opts.get_used_fields_names());
         }
     }
     fn eprint_irrelevant_fields(&self, used_fields: &[&str]) {
@@ -75,7 +86,10 @@ impl From<&PetraOpts> for PetraConfiguration {
         if let Some(golang_opts) = val.golang_opts.as_ref() {
             res.set_golang(golang_opts.into());
         }
-
+        #[cfg(feature = "java")]
+        if let Some(java_opts) = val.java_opts.as_ref() {
+            res.set_java(java_opts.into());
+        }
         res
     }
 }

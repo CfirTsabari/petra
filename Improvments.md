@@ -2,7 +2,8 @@
 # Versions:
 - V1 - I want to have that before I release the first version of `petra`
 - V1.5 - I want to have that, but it doesn't have to be as part of the first version.
-- V2 - I am not sure wether I even want to have that, and only if people will use `petra` and request it this will be considered
+- V2 - I am not sure whether I even want to have that, and only if people will use `petra` and request it this will be considered
+- V3 - the same as V2, but more
 
 # Features
 ## V1
@@ -96,16 +97,19 @@
 1. Python
 1. Rust
 1. C#
+
 ## T1 - V1.5
 1. haskel
 1. Ruby
 1. Shell
 1. Powershell
+
 ## T2 - V3
 1. Kotlin
 1. objectiveC
 1. Scala	
 1. Perl
+1. Julia
 
 ## T3 - V3
 1. Elm
