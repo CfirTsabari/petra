@@ -1,5 +1,5 @@
 mod configuration;
-use petra_backend_core::{format, Name, SimpleLanguageBackend};
+use petra_backend_core::{format, MultiCommentFormatter, Name, SimpleLanguageBackend};
 use std::io::Write;
 
 pub use configuration::PetraGolangConfiguration;
@@ -9,12 +9,18 @@ pub use configuration::PetraGolangConfiguration;
 )]
 pub struct PetraGolangBackend {
     config: PetraGolangConfiguration,
+    need_new_line: bool,
+    comment_writer: MultiCommentFormatter,
 }
 
 impl PetraGolangBackend {
     #[must_use]
     pub const fn new(config: PetraGolangConfiguration) -> Self {
-        Self { config }
+        Self {
+            config,
+            need_new_line: false,
+            comment_writer: MultiCommentFormatter::new(false),
+        }
     }
 }
 
@@ -25,27 +31,33 @@ impl format::PetraFormatHeader for PetraGolangBackend {
 }
 impl format::PetraFormatI64 for PetraGolangBackend {
     fn format<T: Write>(&mut self, name: &Name, data: i64, writer: &mut T) -> std::io::Result<()> {
+        self.need_new_line = true;
         let name = name.to_pascal_case();
         writeln!(writer, "const {name} = {data}")
     }
 }
 impl format::PetraFormatString for PetraGolangBackend {
     fn format<T: Write>(&mut self, name: &Name, data: &str, writer: &mut T) -> std::io::Result<()> {
+        self.need_new_line = true;
         let name = name.to_pascal_case();
         writeln!(writer, "const {name} = \"{data}\"")
     }
 }
 impl format::PetraFormatLineComment for PetraGolangBackend {
     fn format<T: Write>(&mut self, comment: &str, writer: &mut T) -> std::io::Result<()> {
+        if self.need_new_line {
+            self.need_new_line = false;
+            writeln!(writer)?;
+        }
         writeln!(writer, "// {comment}")
     }
 }
 impl format::PetraFormatMultiLineComment for PetraGolangBackend {
     fn format<T: Write>(&mut self, comment: &str, writer: &mut T) -> std::io::Result<()> {
-        writeln!(writer, "\n/*")?;
-        for line in comment.lines().filter(|&x| !x.trim().is_empty()) {
-            writeln!(writer, "{line}")?;
+        if self.need_new_line {
+            self.need_new_line = false;
+            writeln!(writer)?;
         }
-        writeln!(writer, "*/")
+        self.comment_writer.format(comment, "", writer)
     }
 }

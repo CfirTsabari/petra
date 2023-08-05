@@ -32,6 +32,7 @@ jobs:
           - rust
           - golang
           - csharp
+          - java
     steps:
       - uses: actions/checkout@v3
       - name: set up rust from toolcahin file
@@ -93,12 +94,22 @@ jobs:
         uses: CfirTsabari/actions-rs-toolchain@v1
       - name: Build Petra
         run: cargo build -p petra
+
       - name: Run petra python
         run: |
           cat showcase/schema.petra | cargo run -p petra -- -b py > showcase/red_python/red_python/model.py
       - name: Run petra rust
         run: |
           cat showcase/schema.petra | cargo run -p petra -- -b rs > showcase/red_rust/src/model.rs
+      - name: Run petra java
+        run: |
+          cat showcase/schema.petra | cargo run -p petra -- -b java > showcase/red_java/lib/src/main/java/red_java/Defs.java
+      - name: Run petra golang
+        run: |
+          cat showcase/schema.petra | cargo run -p petra -- -b go > showcase/red_golang/pkg/defs/defs.go
+      - name: Run petra csharp
+        run: |
+          cat showcase/schema.petra | cargo run -p petra -- -b c# --no-gen-comment > showcase/red_csharp/RedCsharp/Defs.cs
 
       - name: Verify Changed files
         uses: tj-actions/verify-changed-files@v16
