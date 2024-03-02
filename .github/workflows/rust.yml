@@ -33,12 +33,14 @@ jobs:
           - golang
           - csharp
           - java
+          - ts
+          - js
     steps:
       - uses: actions/checkout@v3
       - name: set up rust from toolcahin file
         uses: CfirTsabari/actions-rs-toolchain@v1
       - name: build ${{ matrix.feature }}
-        run: cargo build -vv -p petra --no-default-features --features ${{ matrix.feature }}
+        run: cargo build -vv -p petra --no-default-features --features lang_${{ matrix.feature }}
 
   build:
     name: Build code

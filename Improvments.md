@@ -11,6 +11,7 @@
 1. read Directory
 ## V1.5
 1. add petra fmt
+2. push binary to other places.
 
 ## V2
 1. read config from file
@@ -49,6 +50,7 @@
 1. add more testing
 1. ~~added generated comment on top~~
 1. Create an error type - thiserror+anyerror
+1. create a feature for each language.
 
 ## V1.5
 1. better way to make trait generic on write
@@ -62,7 +64,6 @@
 1. publish project as a library
 1. better warnings printing
 1. create a public gitpod docker
-1. create a feature for each language.
 
 # Refactoring
 ## V1
@@ -71,6 +72,7 @@
 1. Make document more private and allow iter or adding
 
 ## V2
+1. instead of writing token to lang we should convert tokens to lang token and then write them.
 
 ## Docs
 # V1
@@ -81,6 +83,7 @@
 1. Create website(netlify)
 1. document programming languages tiers and support 
 1. man pages
+1. document how to add more language
 
 # V2
 1. Fiddler - try online
@@ -90,7 +93,7 @@
 # Programming languages
 ## T0 - V1
 1. TS
-1. JS(nodejs+browser)
+1. JS
 1. Golang
 1. Java
 1. CPP
