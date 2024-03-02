@@ -1,17 +1,18 @@
 pub use petra_backend_core::BackendConfiguration;
-#[cfg(feature = "csharp")]
+#[cfg(feature = "lang_csharp")]
 pub use petra_backend_csharp::PetraCSharpConfiguration;
-#[cfg(feature = "golang")]
+#[cfg(feature = "lang_golang")]
 pub use petra_backend_golang::PetraGolangConfiguration;
-#[cfg(feature = "java")]
+#[cfg(feature = "lang_java")]
 pub use petra_backend_java::PetraJavaConfiguration;
+
 #[derive(Default)]
 pub struct PetraConfiguration {
-    #[cfg(feature = "golang")]
+    #[cfg(feature = "lang_golang")]
     golang: Option<PetraGolangConfiguration>,
-    #[cfg(feature = "csharp")]
+    #[cfg(feature = "lang_csharp")]
     csharp: Option<PetraCSharpConfiguration>,
-    #[cfg(feature = "java")]
+    #[cfg(feature = "lang_java")]
     java: Option<PetraJavaConfiguration>,
 }
 impl PetraConfiguration {
@@ -20,7 +21,7 @@ impl PetraConfiguration {
         Self::default()
     }
 }
-#[cfg(feature = "golang")]
+#[cfg(feature = "lang_golang")]
 impl PetraConfiguration {
     pub fn set_golang(&mut self, golang: PetraGolangConfiguration) {
         self.golang = Some(golang);
@@ -31,7 +32,7 @@ impl PetraConfiguration {
         self.golang.unwrap_or_default()
     }
 }
-#[cfg(feature = "csharp")]
+#[cfg(feature = "lang_csharp")]
 impl PetraConfiguration {
     #[must_use]
     pub fn csharp(self) -> PetraCSharpConfiguration {
@@ -41,7 +42,7 @@ impl PetraConfiguration {
         self.csharp = Some(csharp);
     }
 }
-#[cfg(feature = "java")]
+#[cfg(feature = "lang_java")]
 impl PetraConfiguration {
     pub fn set_java(&mut self, java: PetraJavaConfiguration) {
         self.java = Some(java);

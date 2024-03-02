@@ -137,3 +137,42 @@ jobs:
         run: ./gradlew test
       - name: Check Lints
         run: ./gradlew check
+  red_js:
+    name: Run JS Showcase
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: showcase/red_js
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 8
+          run_install: true
+      - name: Run tests
+        run: pnpm test
+      - name: Check Format
+        run: pnpm check_fmt
+      - name: Check Lints
+        run: pnpm eslint
+
+  red_ts:
+    name: Run TS Showcase
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: showcase/red_ts
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 8
+          run_install: true
+      - name: Compile TS
+        run: pnpm build
+      - name: Run tests
+        run: pnpm test
+      - name: Check Format
+        run: pnpm check_fmt
+      - name: Check Lints
+        run: pnpm eslint

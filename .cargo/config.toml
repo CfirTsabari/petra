@@ -1,0 +1,2 @@
+[alias]
+clippy_s = """clippy --tests --workspace --all-targets --all-features -- -D warnings -D let-underscore -D future-incompatible -D unused -D clippy::nursery -D clippy::pedantic"""

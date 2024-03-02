@@ -1,8 +1,8 @@
-#[cfg(feature = "csharp")]
+#[cfg(feature = "lang_csharp")]
 mod csharp;
-#[cfg(feature = "golang")]
+#[cfg(feature = "lang_golang")]
 mod golang;
-#[cfg(feature = "java")]
+#[cfg(feature = "lang_java")]
 mod java;
 
 use super::backend_type::BackendType;
@@ -22,33 +22,33 @@ pub struct PetraOpts {
     /// disable generating the auto generated comment
     #[arg(long)]
     no_gen_comment: bool,
-    #[cfg(feature = "golang")]
+    #[cfg(feature = "lang_golang")]
     #[command(flatten)]
     golang_opts: Option<golang::GoLangBackendOpts>,
-    #[cfg(feature = "csharp")]
+    #[cfg(feature = "lang_csharp")]
     #[command(flatten)]
     csharp_opts: Option<csharp::CSharpBackendOpts>,
-    #[cfg(feature = "java")]
+    #[cfg(feature = "lang_java")]
     #[command(flatten)]
     java_opts: Option<java::JavaBackendOpts>,
 }
 impl PetraOpts {
     pub fn validate(&self) {
-        #[cfg(feature = "golang")]
+        #[cfg(feature = "lang_golang")]
         if let (Some(golang_opts), true) = (
             self.golang_opts.as_ref(),
             self.backend != BackendType::GoLang,
         ) {
             self.eprint_irrelevant_fields(&golang_opts.get_used_fields_names());
         }
-        #[cfg(feature = "csharp")]
+        #[cfg(feature = "lang_csharp")]
         if let (Some(csharp_opts), true) = (
             self.csharp_opts.as_ref(),
             self.backend != BackendType::CSharp,
         ) {
             self.eprint_irrelevant_fields(&csharp_opts.get_used_fields_names());
         }
-        #[cfg(feature = "java")]
+        #[cfg(feature = "lang_java")]
         if let (Some(java_opts), true) =
             (self.java_opts.as_ref(), self.backend != BackendType::Java)
         {
@@ -78,15 +78,15 @@ impl PetraOpts {
 impl From<&PetraOpts> for PetraConfiguration {
     fn from(val: &PetraOpts) -> Self {
         let mut res = Self::new();
-        #[cfg(feature = "csharp")]
+        #[cfg(feature = "lang_csharp")]
         if let Some(csharp_opts) = val.csharp_opts.as_ref() {
             res.set_csharp(csharp_opts.into());
         }
-        #[cfg(feature = "golang")]
+        #[cfg(feature = "lang_golang")]
         if let Some(golang_opts) = val.golang_opts.as_ref() {
             res.set_golang(golang_opts.into());
         }
-        #[cfg(feature = "java")]
+        #[cfg(feature = "lang_java")]
         if let Some(java_opts) = val.java_opts.as_ref() {
             res.set_java(java_opts.into());
         }
