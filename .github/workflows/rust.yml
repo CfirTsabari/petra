@@ -35,6 +35,7 @@ jobs:
           - java
           - ts
           - js
+          - cpp
     steps:
       - uses: actions/checkout@v3
       - name: set up rust from toolcahin file

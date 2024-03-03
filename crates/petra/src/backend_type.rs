@@ -24,6 +24,9 @@ pub enum BackendType {
     #[cfg(feature = "lang_java")]
     #[value(aliases(["java"]),help("aliases: java."))]
     Java,
+    #[cfg(feature = "lang_cpp")]
+    #[value(aliases(["cpp","cplusplus","c++"]),help("aliases: cpp, cplusplus, c++."))]
+    Cpp,
 }
 impl From<BackendType> for CoreBackendType {
     fn from(val: BackendType) -> Self {
@@ -42,6 +45,8 @@ impl From<BackendType> for CoreBackendType {
             BackendType::CSharp => Self::CSharp,
             #[cfg(feature = "lang_java")]
             BackendType::Java => Self::Java,
+            #[cfg(feature = "lang_cpp")]
+            BackendType::Cpp => Self::Cpp,
         }
     }
 }
