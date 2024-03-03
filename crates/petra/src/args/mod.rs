@@ -1,3 +1,5 @@
+#[cfg(feature = "lang_cpp")]
+mod cpp;
 #[cfg(feature = "lang_csharp")]
 mod csharp;
 #[cfg(feature = "lang_golang")]
@@ -31,6 +33,9 @@ pub struct PetraOpts {
     #[cfg(feature = "lang_java")]
     #[command(flatten)]
     java_opts: Option<java::JavaBackendOpts>,
+    #[cfg(feature = "lang_cpp")]
+    #[command(flatten)]
+    cpp_opts: Option<cpp::CppBackendOpts>,
 }
 impl PetraOpts {
     pub fn validate(&self) {
@@ -53,6 +58,10 @@ impl PetraOpts {
             (self.java_opts.as_ref(), self.backend != BackendType::Java)
         {
             self.eprint_irrelevant_fields(&java_opts.get_used_fields_names());
+        }
+        #[cfg(feature = "lang_cpp")]
+        if let (Some(cpp_opts), true) = (self.cpp_opts.as_ref(), self.backend != BackendType::Cpp) {
+            self.eprint_irrelevant_fields(&cpp_opts.get_used_fields_names());
         }
     }
     fn eprint_irrelevant_fields(&self, used_fields: &[&str]) {
@@ -90,6 +99,11 @@ impl From<&PetraOpts> for PetraConfiguration {
         if let Some(java_opts) = val.java_opts.as_ref() {
             res.set_java(java_opts.into());
         }
+        #[cfg(feature = "lang_cpp")]
+        if let Some(cpp_opts) = val.cpp_opts.as_ref() {
+            res.set_cpp(cpp_opts.into());
+        }
+
         res
     }
 }

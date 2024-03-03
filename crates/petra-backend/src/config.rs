@@ -1,4 +1,6 @@
 pub use petra_backend_core::BackendConfiguration;
+#[cfg(feature = "lang_cpp")]
+pub use petra_backend_cpp::PetraCppConfiguration;
 #[cfg(feature = "lang_csharp")]
 pub use petra_backend_csharp::PetraCSharpConfiguration;
 #[cfg(feature = "lang_golang")]
@@ -14,6 +16,8 @@ pub struct PetraConfiguration {
     csharp: Option<PetraCSharpConfiguration>,
     #[cfg(feature = "lang_java")]
     java: Option<PetraJavaConfiguration>,
+    #[cfg(feature = "lang_cpp")]
+    cpp: Option<PetraCppConfiguration>,
 }
 impl PetraConfiguration {
     #[must_use]
@@ -51,5 +55,16 @@ impl PetraConfiguration {
     #[must_use]
     pub fn java(self) -> PetraJavaConfiguration {
         self.java.unwrap_or_default()
+    }
+}
+#[cfg(feature = "lang_cpp")]
+impl PetraConfiguration {
+    pub fn set_cpp(&mut self, cpp: PetraCppConfiguration) {
+        self.cpp = Some(cpp);
+    }
+
+    #[must_use]
+    pub fn cpp(self) -> PetraCppConfiguration {
+        self.cpp.unwrap_or_default()
     }
 }

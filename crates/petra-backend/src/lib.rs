@@ -3,6 +3,8 @@ pub mod config;
 pub use petra_backend_core::BackendConfiguration;
 
 use petra_backend_core::Backend;
+#[cfg(feature = "lang_cpp")]
+use petra_backend_cpp::PetraCppBackend;
 #[cfg(feature = "lang_csharp")]
 use petra_backend_csharp::PetraCSharpBackend;
 #[cfg(feature = "lang_golang")]
@@ -37,6 +39,8 @@ pub enum BackendType {
     CSharp,
     #[cfg(feature = "lang_java")]
     Java,
+    #[cfg(feature = "lang_cpp")]
+    Cpp,
 }
 
 /// # Panics
@@ -63,5 +67,7 @@ pub fn get_backend<T: Write, C: Into<config::PetraConfiguration>>(
         BackendType::Rust => Box::new(PetraRustBackend::new()),
         #[cfg(feature = "lang_java")]
         BackendType::Java => Box::new(PetraJavaBackend::new(configuration.java())),
+        #[cfg(feature = "lang_cpp")]
+        BackendType::Cpp => Box::new(PetraCppBackend::new(configuration.cpp())),
     }
 }

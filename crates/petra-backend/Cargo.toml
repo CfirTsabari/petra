@@ -17,6 +17,7 @@ petra-backend-csharp = { path = "../../impls/petra-backend-csharp", version = "0
 petra-backend-java = { path = "../../impls/petra-backend-java", version = "0.1.0", optional = true }
 petra-backend-js = { path = "../../impls/petra-backend-js", version = "0.1.0", optional = true }
 petra-backend-ts = { path = "../../impls/petra-backend-ts", version = "0.1.0", optional = true }
+petra-backend-cpp = { path = "../../impls/petra-backend-cpp", version = "0.1.0", optional = true }
 
 [features]
 lang_python = ["dep:petra-backend-python"]
@@ -26,3 +27,4 @@ lang_csharp = ["dep:petra-backend-csharp"]
 lang_java = ["dep:petra-backend-java"]
 lang_js = ["dep:petra-backend-js"]
 lang_ts = ["dep:petra-backend-ts"]
+lang_cpp = ["dep:petra-backend-cpp"]

@@ -176,3 +176,21 @@ jobs:
         run: pnpm check_fmt
       - name: Check Lints
         run: pnpm eslint
+  
+  red_cpp:
+    name: Run CPP Showcase
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: showcase/red_cpp
+    steps:
+      - uses: actions/checkout@v4
+    
+      - name: Run Cmake
+        run: cmake -S . -B build
+      - name: Build
+        run: cmake --build build
+      - name: Run test
+        run: build/test/test_main
+      - name: Check format
+        run: cmake --build build --target main-clangformat-check

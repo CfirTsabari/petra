@@ -23,6 +23,7 @@ lang_T0 = [
     "lang_java",
     "lang_ts",
     "lang_js",
+    "lang_cpp",
 ]
 lang_python = ["petra-backend/lang_python"]
 lang_rust = ["petra-backend/lang_rust"]
@@ -31,3 +32,4 @@ lang_csharp = ["petra-backend/lang_csharp"]
 lang_java = ["petra-backend/lang_java"]
 lang_js = ["petra-backend/lang_js"]
 lang_ts = ["petra-backend/lang_ts"]
+lang_cpp = ["petra-backend/lang_cpp"]
