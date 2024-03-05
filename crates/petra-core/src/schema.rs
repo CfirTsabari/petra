@@ -1,6 +1,6 @@
 use convert_case::{Case, Casing};
 
-#[derive(Debug, Clone, Default)]
+#[derive(Debug, Clone, Default, Eq, PartialEq)]
 pub struct Document {
     pub items: Vec<TopItem>,
 }
@@ -11,7 +11,7 @@ impl Document {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Eq, PartialEq)]
 pub struct VarDeclaration {
     pub name: Name,
     pub value: VarValue,
@@ -26,18 +26,38 @@ impl VarDeclaration {
         }
     }
 }
-#[derive(Debug, Clone)]
-pub enum VarValue {
-    String(String),
-    Integer64(i64),
+#[derive(Debug, Clone, Eq, PartialEq)]
+pub enum ValueRef {
+    Primitive(Name),
+    EnumVariant((Name, Name)),
 }
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Eq, PartialEq)]
+pub enum VarValue {
+    String(ValueOrPointer<String>),
+    Integer64(ValueOrPointer<i64>),
+    EnumValue((Name, Name)),
+    EnumString(EnumDefine<String>),
+    EnumInteger64(EnumDefine<i64>),
+    ListString(Vec<ValueOrPointer<String>>),
+    ListInteger64(Vec<ValueOrPointer<i64>>),
+}
+#[derive(Debug, Clone, Eq, PartialEq)]
+pub struct EnumDefine<T> {
+    pub extends: Option<Name>,
+    pub variants: Vec<(Name, ValueOrPointer<T>)>,
+}
+#[derive(Debug, Clone, Eq, PartialEq)]
+pub enum ValueOrPointer<T> {
+    Ref(ValueRef),
+    Raw(T),
+}
+#[derive(Debug, Clone, Eq, PartialEq)]
 pub enum TopItem {
     Comment(String),
     MultiLineComment(String),
     VarDeclaration(VarDeclaration),
 }
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Eq, PartialEq)]
 pub struct Name {
     data: String,
 }

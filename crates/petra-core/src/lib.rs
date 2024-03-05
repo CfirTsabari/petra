@@ -1,3 +1,5 @@
 mod schema;
 
-pub use schema::{Document, Name, TopItem, VarDeclaration, VarValue};
+pub use schema::{
+    Document, EnumDefine, Name, TopItem, ValueOrPointer, ValueRef, VarDeclaration, VarValue,
+};

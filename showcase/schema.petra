@@ -9,3 +9,13 @@ for example we can talk about amount of fruits
  */
 ApplesCount:i64 = 236;
 OrangesCount:i64 = 454588979794318;
+
+WednesdaySource:string = "Wednesday";
+WeekDay:enum[string] extends WorkDay = [Saturday:"Saturday",Sunday:"Sunday"];
+WorkDay:enum[string] = [Monday:"Monday",Tuesday:"Tuesday",Wednesday:'WednesdaySource,Thursday:"Thursday",Friday:"Friday"];
+OddDay:enum[string] = [Sunday:'WeekDay.Sunday,Tuesday:'WeekDay.Tuesday,Thursday:'WeekDay.Thursday,Saturday:'WeekDay.Saturday];
+WfhDay:list[string] = ['WorkDay.Monday,'WorkDay.Wednesday];
+MyFavDay:#WeekDay = 'WorkDay.Wednesday;
+FruitCounts:enum[i64] = [Apples:'ApplesCount,Orange:'OrangesCount,Lemons:33];
+
+

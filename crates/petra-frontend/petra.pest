@@ -1,18 +1,81 @@
-WHITESPACE = _{ " " }
-multi_line_comment = { "/*" ~ multi_line_comment_val ~ "*/" }
-new_line_comment = { "//" ~new_line_comment_val}
-new_line_comment_val = ${ (!NEWLINE~(ANY))* }
-multi_line_comment_val = ${(!"*/" ~ ANY)*}
-var_declaration = {var_name~":"~var_type~"="~var_value~";"}
-var_name = {ASCII_ALPHA~ASCII_ALPHANUMERIC*}
-var_type = {"i64" | "string"}
-var_value = {var_value_string | var_value_i64}
-var_value_string = ${"\""~var_value_string_val~"\""}
-var_value_string_val = {ASCII_ALPHANUMERIC*}
-var_value_i64 = {ASCII_DIGIT+}
-stmt = _{ 
-    var_declaration
-    | new_line_comment
-    | multi_line_comment }
+// this rule is implicitly inserted between each sequence and between every repetition, except in atomic rules.
+// it's silent because we don't care about the spaces.
+WHITESPACE         = _{ " " }
+multi_line_comment =  { "/*" ~ multi_line_comment_val ~ "*/" }
+new_line_comment   =  { "//" ~ new_line_comment_val }
 
-program = _{ SOI ~ NEWLINE* ~ (stmt ~ NEWLINE+) * ~ stmt? ~ EOI }
+// this is using compound atomic rules:
+// compound - because we need the comments to be processed.
+// atomic - because i want space to be left inside.
+new_line_comment_val   = ${ (!NEWLINE ~ (ANY))* }
+multi_line_comment_val = ${ (!"*/" ~ ANY)* }
+
+var_declaration = {
+    var_name ~ ":" ~ (tv_i64 | tv_string | tv_enum_string | tv_enum_i64 | tv_enum_value | tv_list_string | tv_list_i64) ~ ";"
+}
+
+// Name
+var_name = ${ ASCII_ALPHA ~ ASCII_ALPHANUMERIC* }
+
+// Ref
+ref_value_var  = ${ "'" ~ var_name }
+ref_value_enum = ${ "'" ~ var_name ~ "." ~ var_name }
+
+// Enum extends
+enum_extends = { "extends" ~ var_name }
+
+// i64
+tv_i64  = { "i64" ~ "=" ~ (val_i64 | ref_value_var | ref_value_enum) }
+val_i64 = { ASCII_DIGIT+ }
+
+// string
+tv_string = { "string" ~ "=" ~ (val_string | ref_value_var | ref_value_enum) }
+// easier to remove the quotes
+val_string       = ${ "\"" ~ val_string_inner ~ "\"" }
+val_string_inner =  { ASCII_ALPHANUMERIC* }
+
+// String Enum
+tv_enum_string       = { "enum" ~ "[" ~ "string" ~ "]" ~ enum_extends? ~ "=" ~ val_enum_string }
+val_enum_string      = { "[" ~ NEWLINE? ~ val_enum_string_item ~ ("," ~ NEWLINE? ~ val_enum_string_item)* ~ ","? ~ NEWLINE? ~ "]" }
+val_enum_string_item = { var_name ~ ":" ~ (val_string | ref_value_var | ref_value_enum) }
+
+// I64 Enum
+tv_enum_i64       = { "enum" ~ "[" ~ "i64" ~ "]" ~ enum_extends? ~ "=" ~ val_enum_i64 }
+val_enum_i64      = { "[" ~ NEWLINE? ~ val_enum_i64_item ~ ("," ~ NEWLINE? ~ val_enum_i64_item)* ~ ","? ~ NEWLINE? ~ "]" }
+val_enum_i64_item = { var_name ~ ":" ~ (val_i64 | ref_value_var | ref_value_enum) }
+
+// Enum Value
+tv_enum_value = { enum_value_type ~ "=" ~ ref_value_enum }
+// no spaces allowed
+enum_value_type = ${ "#" ~ var_name }
+
+// String List
+tv_list_string       = { "list" ~ "[" ~ "string" ~ "]" ~ "=" ~ val_list_string }
+val_list_string      = { "[" ~ NEWLINE? ~ val_list_string_item ~ ("," ~ NEWLINE? ~ val_list_string_item)* ~ ","? ~ NEWLINE? ~ "]" }
+val_list_string_item = { val_string | ref_value_var | ref_value_enum }
+
+// i64 List
+tv_list_i64       = { "list" ~ "[" ~ "i64" ~ "]" ~ "=" ~ val_list_i64 }
+val_list_i64      = { "[" ~ NEWLINE? ~ val_list_i64_item ~ ("," ~ NEWLINE? ~ val_list_i64_item)* ~ ","? ~ NEWLINE? ~ "]" }
+val_list_i64_item = { val_i64 | ref_value_var | ref_value_enum }
+
+// main statement
+stmt = _{
+    var_declaration
+  | new_line_comment
+  | multi_line_comment
+}
+
+// this force at least one new line after each statement
+// in addition it allow the file to end and start with either a statement or a new lines.
+program = _{ SOI ~ NEWLINE* ~ (stmt ~ NEWLINE+)* ~ stmt? ~ EOI }
+
+/*
+    WednesdaySource:string = "Wednesday";
+    WeekDay:enum[string] extends WorkDay = [Saturday:"Saturday",Sunday:"Sunday"];
+    WorkDay:enum[string] = [Monday:"Monday",Tuesday:"Tuesday",Wednesday:'WednesdaySource,Thursday:"Thursday",Friday:"Friday"];
+    OddDay:enum[string] = [Sunday:'WeekDay.Sunday,Tuesday:'WeekDay.Tuesday,Thursday:'WeekDay.Thursday,Saturday:'WeekDay.Saturday];
+    WfhDay:list[#WorkDay] = ['WorkDay.Monday,'WorkDay.Wednesday];
+    MyFavDay:#WeekDay = 'WorkDay.Wednesday;
+    FruitCounts:enum[i64] = [Apples:'ApplesCount,Orange:'OrangesCount,Lemons:33];
+*/
